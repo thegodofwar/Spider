@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Error">
+	<resultMap id="SiteError" class="com.pw.spider.model.Error">
+		<result property="id" column="id" jdbcType="INTEGER" />
+		<result property="siteId" column="siteId" jdbcType="INTEGER" />
+		<result property="bookId" column="bookId" jdbcType="INTEGER" />
+		<result property="url" column="url" jdbcType="VARCHAR" />
+		<result property="type" column="type" jdbcType="INTEGER" />
+		<result property="updateTime" column="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<insert id="insertError">
+	    <![CDATA[
+	      insert into error (siteId,bookId,url,type,updateTime) values 
+	      (#siteId#,#bookId#,#url#,#type#,#updateTime#)
+	    ]]>
+	    <selectKey keyProperty="id" resultClass="long">
+            <![CDATA[
+                SELECT LAST_INSERT_ID() as id 
+            ]]>
+        </selectKey>
+	</insert>
+	
+	<delete id="delete" parameterClass="java.util.Map">
+	  delete from error where id = #id#
+	</delete>
+	
+	<select id="getRetrysCount" resultClass="long">
+	  select count(*) as count from error er join entry en on (er.siteId=en.siteId) where er.type in (7,8,10,11) and en.isStop=1 order by er.id
+	</select>
+	
+	<select id="getRetrys"  parameterClass="java.util.Map" resultMap="SiteError">
+	  select er.id,er.siteId,er.bookId,er.url,er.type,er.updateTime
+	  from error er join entry en on (er.siteId=en.siteId) where er.type in (7,8,10,11) and en.isStop=1 order by er.id limit #start#,#limit#
+	</select>
+	
+	<select id="getError" parameterClass="java.util.Map" resultMap="SiteError">
+	  select id,siteId,bookId,url,type,updateTime
+	  from error where bookId=#bookId# and url=#url#
+	</select>
+	
+</sqlMap>

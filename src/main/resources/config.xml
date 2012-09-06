@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Parameter configuration</comment>
+
+<entry key="retry">3</entry>
+
+<entry key="connectionTimeout">6000</entry>
+
+<entry key="soTimeout">9000</entry>
+
+<entry key="insertBatchNum">200</entry>
+
+<entry key="crawlCover_DirInterval">1200</entry>
+
+<entry key="crawlContentInterval">300</entry>
+
+<entry key="crawlContentNumPerThread">10000</entry>
+
+<!-- when max error count,stop crawling this web site -->
+<entry key="coverCrawlMaxErrorCount">10000</entry>
+
+<entry key="dirCrawlMaxErrorCount">10000</entry>
+
+<!-- the initial long time of sleeping when server busy -->
+<entry key="init_serverBusy_sleepTime">300000</entry>
+
+<entry key="retryNumPerThread">1000</entry>
+
+<entry key="retryWait">5000</entry>
+
+</properties>

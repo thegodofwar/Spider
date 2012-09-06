@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Regular">
+	<resultMap id="RegularResult" class="com.pw.spider.model.Regular">
+		<result property="id" column="id" jdbcType="INTEGER" />
+		<result property="siteId" column="siteId" jdbcType="INTEGER" />
+		<result property="charset" column="charset" jdbcType="VARCHAR" />
+		<result property="regex" column="regex" jdbcType="VARCHAR" />
+		<result property="type" column="type" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<insert id="insertRegular">
+	    <![CDATA[
+	      insert into regular (siteId,charset,regex,type) values 
+	      (#siteId#,#charset#,#regex#,#type#)
+	    ]]>
+	    <selectKey keyProperty="id" resultClass="int">
+            <![CDATA[
+                SELECT LAST_INSERT_ID() as id 
+            ]]>
+        </selectKey>
+	</insert>
+	
+	<select id="getBySiteIdAndType" parameterClass="java.util.Map" resultMap="RegularResult">
+      select id,siteId,charset,regex,type from regular where siteId=#siteId# and type=#type#
+ 	</select>
+	
+</sqlMap>

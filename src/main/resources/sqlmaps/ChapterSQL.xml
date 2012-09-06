@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Chapter">
+	<resultMap id="ChapterResult" class="com.pw.spider.model.Chapter">
+		<result property="id" column="id" jdbcType="INTEGER" />
+		<result property="kv" column="kv" jdbcType="INTEGER" />
+		<result property="chapterId" column="chapterId" jdbcType="INTEGER" />
+		<result property="name" column="name" jdbcType="VARCHAR" />
+		<result property="url" column="url" jdbcType="VARCHAR" />
+		<result property="siteId" column="siteId" jdbcType="INTEGER" />
+		<result property="bookId" column="bookId" jdbcType="INTEGER" />
+		<result property="type" column="type" jdbcType="INTEGER" />
+		<result property="tomeOrder" column="tomeOrder" jdbcType="INTEGER" />
+		<result property="chapterMatchStart" column="chapterMatchStart" jdbcType="INTEGER" />
+		<result property="updateTime" column="updateTime" jdbcType="TIMESTAMP" />
+		<result property="kvs" column="kvs" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<insert id="insertChapter">
+	    <![CDATA[
+	      insert into chapter_$siteId$ (kv,chapterId,name,url,siteId,bookId,type,tomeOrder,chapterMatchStart,updateTime,kvs) values 
+	      (#kv#,#chapterId#,#name#,#url#,#siteId#,#bookId#,#type#,#tomeOrder#,#chapterMatchStart#,#updateTime#,#kvs#)
+	    ]]>
+	    <selectKey keyProperty="id" resultClass="long">
+            <![CDATA[
+                SELECT LAST_INSERT_ID() as id 
+            ]]>
+        </selectKey>
+	</insert>
+	
+	<select id="getChapter" parameterClass="java.util.Map" resultMap="ChapterResult">
+	  select id,kv,chapterId,name,url,siteId,bookId,type,tomeOrder,chapterMatchStart,updateTime,kvs
+	  from chapter_$siteId$ where bookId=#bookId# and name=#name# and url=#url#
+	</select>
+	
+	<update id="updateKV" parameterClass="java.util.Map">
+	  update chapter_$siteId$ set kv=#kv#,type=#type# where id=#id#
+	</update>
+	
+	<update id="updateKVS" parameterClass="java.util.Map">
+	  update chapter_$siteId$ set kvs=#kvs#,type=#type# where id=#id#
+	</update>
+	
+	<select id="getKVCount" parameterClass="java.util.Map" resultClass="long">
+	  select count(*) as count from chapter_$siteId$ where kv=0
+	</select>
+	
+	<select id="getKVSCount" parameterClass="java.util.Map" resultClass="long">
+	  select count(*) as count from chapter_$siteId$ where kvs is null
+	</select>
+	
+	<select id="getKVChapters" parameterClass="java.util.Map" resultMap="ChapterResult">
+	  select id,kv,chapterId,name,url,siteId,bookId,type,tomeOrder,chapterMatchStart,updateTime,kvs
+	  from chapter_$siteId$ where kv=0 order by id limit #from#,#limit#
+	</select>
+	
+	<select id="getKVSChapters" parameterClass="java.util.Map" resultMap="ChapterResult">
+	  select id,kv,chapterId,name,url,siteId,bookId,type,tomeOrder,chapterMatchStart,updateTime,kvs
+	  from chapter_$siteId$ where kvs is null order by id limit #from#,#limit#
+	</select>
+	
+	<delete id="deleteChapters" parameterClass="java.util.Map">
+	  delete from chapter_$siteId$ where bookId = #bookId#
+	</delete>
+	
+	<select id="getChaptersByBookId" parameterClass="java.util.Map" resultMap="ChapterResult">
+	  select id,kv,chapterId,name,url,siteId,bookId,type,tomeOrder,chapterMatchStart,updateTime,kvs
+	  from chapter_$siteId$ where bookId=#bookId# and kvs is null order by chapterId
+	</select>
+	
+	<select id="getHotKVSCount" parameterClass="java.util.Map" resultClass="long">
+	  select count(*) as count from chapter_$siteId$ c join book b on (c.bookId=b.id) where b.hot=#hot# and c.kvs is null
+	</select>
+	
+	<select id="getHotKVSChapters" parameterClass="java.util.Map" resultMap="ChapterResult">
+	  select c.id,c.kv,c.chapterId,c.name,c.url,c.siteId,c.bookId,c.type,c.tomeOrder,c.chapterMatchStart,c.updateTime,c.kvs
+	  from chapter_$siteId$ c join book b on (c.bookId=b.id) where b.hot=#hot# and c.kvs is null order by c.id limit #from#,#limit#
+	</select>
+	
+</sqlMap>

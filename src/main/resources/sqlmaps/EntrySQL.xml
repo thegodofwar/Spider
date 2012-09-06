@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Entry">
+	<resultMap id="EntryResult" class="com.pw.spider.model.Entry">
+		<result property="siteId" column="siteId" jdbcType="INTEGER" />
+		<result property="url" column="url" jdbcType="VARCHAR" />
+		<result property="totalPage" column="totalPage" jdbcType="INTEGER" />
+		<result property="updatePageCrawlIndex" column="updatePageCrawlIndex" jdbcType="INTEGER" />
+		<result property="lastTime" column="lastTime" jdbcType="TIMESTAMP" />
+		<result property="isStop" column="isStop" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<insert id="insertEntry">
+	    <![CDATA[
+	      insert into entry (siteId,url,totalPage,updatePageCrawlIndex,lastTime,isStop) values 
+	      (#siteId#,#url#,#totalPage#,#updatePageCrawlIndex#,#lastTime#,#isStop#)
+	    ]]>
+	</insert>
+	
+	<select id="getBySiteId" parameterClass="java.util.Map" resultMap="EntryResult">
+      select siteId,url,totalPage,updatePageCrawlIndex,lastTime,isStop from entry where siteId=#siteId#
+ 	</select>
+ 	
+ 	<update id="updateLastTime" parameterClass="java.util.Map">
+	  update entry set lastTime=#latestUpdateTime# where siteId=#siteId#
+	</update>
+	
+	<select id="getUpdatePageCrawlIndex" parameterClass="java.util.Map" resultClass="int">
+	  select updatePageCrawlIndex from entry where siteId=#siteId#
+	</select>
+	
+	<update id="updateUpdatePageCrawlIndex" parameterClass="java.util.Map">
+	  update entry set updatePageCrawlIndex=#value# where siteId=#siteId#
+	</update>
+ 	
+</sqlMap>

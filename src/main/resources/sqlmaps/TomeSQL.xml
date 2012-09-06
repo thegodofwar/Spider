@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Tome">
+	<resultMap id="TomeResult" class="com.pw.spider.model.Tome">
+		<result property="id" column="id" jdbcType="INTEGER" />
+		<result property="bookId" column="bookId" jdbcType="INTEGER" />
+		<result property="name" column="name" jdbcType="VARCHAR" />
+		<result property="tomeOrder" column="tomeOrder" jdbcType="INTEGER" />
+		<result property="tomeMatchStart" column="tomeMatchStart" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<insert id="insertTome">
+	    <![CDATA[
+	      insert into tome (bookId,name,tomeOrder,tomeMatchStart) values 
+	      (#bookId#,#name#,#tomeOrder#,#tomeMatchStart#)
+	    ]]>
+	    <selectKey keyProperty="id" resultClass="long">
+            <![CDATA[
+                SELECT LAST_INSERT_ID() as id 
+            ]]>
+        </selectKey>
+	</insert>
+	
+	<select id="getByTomeOrder" parameterClass="java.util.Map" resultMap="TomeResult">
+	  select id,bookId,name,tomeOrder,tomeMatchStart
+	  from tome where bookId=#bookId# and tomeOrder=#tomeOrder#
+	</select>
+	
+</sqlMap>

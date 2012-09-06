@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Site">
+	<resultMap id="SiteResult" class="com.pw.spider.model.Site">
+		<result property="id" column="id" jdbcType="INTEGER" />
+		<result property="name" column="name" jdbcType="VARCHAR" />
+		<result property="url" column="url" jdbcType="VARCHAR" />
+		<result property="charset" column="charset" jdbcType="VARCHAR" />
+		<result property="type" column="type" jdbcType="INTEGER" />
+		<result property="weight" column="weight" jdbcType="INTEGER" />
+		<result property="useProxy" column="useProxy" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<insert id="insertSite">
+	    <![CDATA[
+	      insert into site (name,url,charset,type,weight,useProxy) values 
+	      (#name#,#url#,#charset#,#type#,#weight#,#useProxy#)
+	    ]]>
+	    <selectKey keyProperty="id" resultClass="int">
+            <![CDATA[
+                SELECT LAST_INSERT_ID() as id 
+            ]]>
+        </selectKey>
+	</insert>
+	
+	<select id="getIdByName" parameterClass="java.util.Map" resultClass="int">
+	   select id from site where name = #name#
+	</select>
+	
+	<select id="getSiteByName" parameterClass="java.util.Map" resultMap="SiteResult">
+	   select id,name,url,charset,type,weight,useProxy from site where name = #name#
+	</select>
+	
+	<select id="getSiteById" parameterClass="java.util.Map" resultMap="SiteResult">
+	   select id,name,url,charset,type,weight,useProxy from site where id = #id#
+	</select>
+	
+	<select id="getAll" resultMap="SiteResult">
+	   select s.id,s.name,s.url,s.charset,s.type,s.weight,s.useProxy from site s join entry e on (s.id=e.siteId) where e.isStop=1
+	</select>
+	
+</sqlMap>

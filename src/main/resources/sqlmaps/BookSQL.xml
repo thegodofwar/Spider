@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Book">
+	<resultMap id="BookResult" class="com.pw.spider.model.Book">
+		<result property="id" column="id" jdbcType="INTEGER" />
+		<result property="bookId" column="bookId" jdbcType="INTEGER" />
+		<result property="siteId" column="siteId" jdbcType="INTEGER" />
+		<result property="name" column="name" jdbcType="VARCHAR" />
+		<result property="author" column="author" jdbcType="VARCHAR" />
+		<result property="url" column="url" jdbcType="VARCHAR" />
+		<result property="dirUrl" column="dirUrl" jdbcType="VARCHAR" />
+		<result property="coverUrl" column="coverUrl" jdbcType="VARCHAR" />
+		<result property="brief" column="brief" jdbcType="VARCHAR" />
+		<result property="category" column="category" jdbcType="VARCHAR" />
+		<result property="newChapterName" column="newChapterName" jdbcType="VARCHAR" />
+		<result property="newChapterUrl" column="newChapterUrl" jdbcType="VARCHAR" />
+		<result property="updateTime" column="updateTime" jdbcType="TIMESTAMP" />
+		<result property="webUpdateTime" column="webUpdateTime" />
+		<result property="createTime" column="createTime" />
+		<result property="hot" column="hot" />
+	</resultMap>
+	
+	<insert id="insertBook">
+	    <![CDATA[
+	      insert into book (bookId,siteId,name,author,url,dirUrl,coverUrl,brief,
+	      category,newChapterName,newChapterUrl,updateTime,webUpdateTime,createTime) values 
+	      (#bookId#,#siteId#,#name#,#author#,#url#,#dirUrl#,#coverUrl#,#brief#,
+	      #category#,#newChapterName#,#newChapterUrl#,#updateTime#,#webUpdateTime#,#createTime#)
+	    ]]>
+	    <selectKey keyProperty="id" resultClass="long">
+            <![CDATA[
+                SELECT LAST_INSERT_ID() as id 
+            ]]>
+        </selectKey>
+	</insert>
+	
+	<select id="getBookLimit" parameterClass="java.util.Map" resultMap="BookResult">
+	select id,bookId,siteId,name,author,url,dirUrl,coverUrl,brief,
+	      category,newChapterName,newChapterUrl,updateTime,webUpdateTime,createTime,hot
+	from book order by id limit #start#,#limit#
+	</select>
+	
+	<select id="getBySiteIdNameAuthor" parameterClass="java.util.Map" resultMap="BookResult">
+	select id,bookId,siteId,name,author,url,dirUrl,coverUrl,brief,
+	      category,newChapterName,newChapterUrl,updateTime,webUpdateTime,createTime,hot
+	from book where name=#bookName# and author=#authorName# and siteId=#siteId#
+	</select>
+	
+	<select id="getById" parameterClass="java.util.Map" resultMap="BookResult">
+	  select id,bookId,siteId,name,author,url,dirUrl,coverUrl,brief,
+	      category,newChapterName,newChapterUrl,updateTime,webUpdateTime,createTime,hot
+	  from book where id=#id#
+	</select>
+	
+	<update id="updateCover" parameterClass="java.util.Map">
+	  update book set brief = #brief#,coverUrl = #coverUrl# where 
+	  id = #id#
+	</update>
+	
+	<update id="updateLatestChapter" parameterClass="java.util.Map">
+	  update book set newChapterName = #newChapterName#,newChapterUrl = #newChapterUrl#,webUpdateTime = #webUpdateTime# where 
+	  id = #id#
+	</update>
+	
+	<select id="getMaxWebUpdateTime" parameterClass="java.util.Map" resultClass="java.util.Date">
+	  select max(webUpdateTime) as webDate from book where siteId=#siteId# and hot=0
+	</select>
+	
+	<select id="getAllHotBooks" parameterClass="java.util.Map" resultMap="BookResult">
+	 select id,bookId,siteId,name,author,url,dirUrl,coverUrl,brief,
+	       category,newChapterName,newChapterUrl,updateTime,webUpdateTime,createTime,hot
+	 from book where siteId=#siteId# and hot=1 order by id
+	</select>
+	
+</sqlMap>
